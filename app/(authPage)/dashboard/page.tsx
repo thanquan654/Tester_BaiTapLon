@@ -4,7 +4,10 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 export default function Dashboard() {
-	const [user, setUser] = useState(null)
+	const [user, setUser] = useState<{
+		name: string
+		email: string
+	} | null>(null)
 	const [isLoading, setLoading] = useState(false)
 	const router = useRouter()
 

@@ -31,7 +31,11 @@ export async function GET(req: NextRequest) {
 			)
 		}
 
-		const user = await User.findById(decoded.userId).select('-password')
+		const user = await User.findById(
+			typeof decoded === 'object' && decoded !== null
+				? decoded.userId
+				: undefined,
+		).select('-password')
 
 		if (!user) {
 			return NextResponse.json(
