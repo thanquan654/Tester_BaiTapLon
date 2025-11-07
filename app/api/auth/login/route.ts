@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 		;(await cookies()).set('token', token, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
-			maxAge: keepLoggedIn ? 7 * 24 * 60 * 60 * 1000 : 2 * 1000,
+			maxAge: keepLoggedIn && 7 * 24 * 60 * 60 * 1000,
 			path: '/',
 		})
 
