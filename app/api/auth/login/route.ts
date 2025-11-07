@@ -40,16 +40,26 @@ export async function POST(req: NextRequest) {
 			{ userId: user._id },
 			process.env.JWT_SECRET || 'your-secret-key',
 			{
-				expiresIn: keepLoggedIn ? '7d' : '2s',
+				expiresIn: keepLoggedIn ? '7d' : '1h',
 			},
 		)
 
-		;(await cookies()).set('token', token, {
+		const cookieOptions: {
+			httpOnly: boolean
+			secure: boolean
+			path: string
+			maxAge?: number
+		} = {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
-			maxAge: keepLoggedIn && 7 * 24 * 60 * 60 * 1000,
 			path: '/',
-		})
+		}
+
+		if (keepLoggedIn) {
+			cookieOptions.maxAge = 7 * 24 * 60 * 60
+		}
+
+		;(await cookies()).set('token', token, cookieOptions)
 
 		return NextResponse.json({ message: 'Logged in successfully' })
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
