@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs'
 import dbConnect from '@/lib/dbConnect' // Import hàm kết nối DB
 import User from '@/models/User' // Import User model
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export async function POST(req: NextRequest) {
 	await dbConnect()
 
@@ -12,6 +14,13 @@ export async function POST(req: NextRequest) {
 		if (!name || !email || !password) {
 			return NextResponse.json(
 				{ message: 'All fields are required' },
+				{ status: 400 },
+			)
+		}
+
+		if (!emailRegex.test(email)) {
+			return NextResponse.json(
+				{ message: 'Invalid email format' },
 				{ status: 400 },
 			)
 		}
